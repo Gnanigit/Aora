@@ -6,10 +6,12 @@ import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Link, router } from "expo-router";
 import { signUp } from "../../routes/auth";
-
+import { useDispatch } from "react-redux";
+import { setIsLogged, setUser } from "../../redux/slices/auth";
 const SignUp = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   const submit = async () => {
     if (!form.email || !form.password || !form.username) {
@@ -18,8 +20,9 @@ const SignUp = () => {
     setIsSubmitting(true);
     try {
       const result = await signUp(form.email, form.password, form.username);
-      //set it to global state
-      router.push("/home");
+      dispatch(setUser(result.user));
+      dispatch(setIsLogged(true));
+      router.push("/sign-in");
     } catch (error) {
       Alert.alert("Error", error.message);
       setIsSubmitting(false);

@@ -16,7 +16,9 @@ import { getAllPosts } from "../../routes/auth";
 import { getLatestPosts } from "../../routes/auth";
 import useFetch from "../../hooks/useFetch";
 import VideoCard from "../../components/VideoCard";
+import { useSelector } from "react-redux";
 const Home = () => {
+  const { isLogged, user } = useSelector((state) => state.auth);
   const { data: posts, refetch } = useFetch(getAllPosts);
   const { data: latestPosts } = useFetch(getLatestPosts);
   const [refreshing, setRefreshing] = useState(false);
@@ -41,7 +43,7 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className="text-2xl font-psemibold text-white">
-                  Gnani
+                  {user?.username}
                 </Text>
               </View>
               <View className="mt-1.5">

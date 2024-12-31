@@ -18,7 +18,7 @@ import VideoCard from "../../components/VideoCard";
 const Search = () => {
   const { query } = useLocalSearchParams();
   const { data: posts, refetch } = useFetch(() => searchPosts(query));
-  // console.log(query, posts);
+
   useEffect(() => {
     if (query) {
       refetch();
@@ -29,7 +29,6 @@ const Search = () => {
     <SafeAreaView className="bg-primary h-full pt-4">
       <FlatList
         data={posts}
-        // data={[]}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (

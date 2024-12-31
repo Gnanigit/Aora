@@ -79,3 +79,27 @@ export const searchPosts = async (query) => {
     throw error;
   }
 };
+
+export const getUserPosts = async (userId) => {
+  try {
+    const response = await axios.get(`${baseURL}/posts/get-user-posts`, {
+      withCredentials: true,
+      params: { userId },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signout = async () => {
+  try {
+    const response = await axios.delete(`${baseURL}/auth/logout`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};

@@ -16,6 +16,7 @@ const SignIn = () => {
   const { isLogged, user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+
   const submit = async () => {
     if (!form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");

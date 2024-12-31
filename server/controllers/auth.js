@@ -41,26 +41,22 @@ export const createUser = async (req, res) => {
   console.log(email);
 
   try {
-    // Hash the user's password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Generate a unique avatar using DiceBear
     const avatarSvg = createAvatar(sprites, {
-      seed: username || email, // Use username or email as seed
-      radius: 50, // Optional: Customize avatar properties
+      seed: username || email,
+      radius: 50,
     });
 
-    const avatarBase64 = Buffer.from(avatarSvg).toString("base64"); // Convert SVG to base64
+    const avatarBase64 = Buffer.from(avatarSvg).toString("base64");
 
-    // Create a new user account with the avatar
     const newAccount = new User({
       email,
       password: passwordHash,
       username,
-      avatar: `data:image/svg+xml;base64,${avatarBase64}`, // Store avatar in base64 format
+      avatar: `data:image/svg+xml;base64,${avatarBase64}`,
     });
 
-    // Save the user to the database
     const newUser = await newAccount.save();
 
     return res.status(200).send(newUser);
@@ -90,4 +86,15 @@ export const getCurrentUser = async (req, res) => {
     console.error("Error verifying token:", err);
     return res.status(403).json({ message: "Invalid token" });
   }
+};
+
+export const logout = (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    expires: new Date(0),
+  });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 };
