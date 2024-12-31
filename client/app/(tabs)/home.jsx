@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  SafeAreaView,
-  FlatList,
-  RefreshControl,
-} from "react-native";
+import { View, Text, Image, FlatList, RefreshControl } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { images } from "../../constants";
@@ -17,6 +10,7 @@ import { getLatestPosts } from "../../routes/auth";
 import useFetch from "../../hooks/useFetch";
 import VideoCard from "../../components/VideoCard";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 const Home = () => {
   const { isLogged, user } = useSelector((state) => state.auth);
   const { data: posts, refetch } = useFetch(getAllPosts);

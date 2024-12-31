@@ -5,6 +5,7 @@ import {
   getLatestPosts,
   uploadPost,
   getUserPosts,
+  uploadPosts,
 } from "../controllers/post.js";
 
 const PostRouter = express.Router();
@@ -17,5 +18,6 @@ PostRouter.get("/get-user-posts", getUserPosts);
 
 // POST request
 PostRouter.post("/upload-post", uploadPost);
+PostRouter.post("/upload-posts", uploadPosts);
 
 export default PostRouter;

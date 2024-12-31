@@ -103,3 +103,16 @@ export const signout = async () => {
     console.error("Logout failed:", error);
   }
 };
+
+export const uploadPost = async (image) => {
+  console.log("hello:", image);
+  try {
+    const response = await axios.post(`${baseURL}/posts/upload-posts`, {
+      withCredentials: true,
+      image,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -70,3 +70,36 @@ export const getUserPosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+import cloudinary from "cloudinary";
+
+// Configure Cloudinary
+// cloudinary.v2.config({
+//   cloud_name: "dqftexife",
+//   api_key: "743136415311842",
+//   api_secret: "HWpZ9YQqhrn9SXR3dbmf4mjGhWw",
+// });
+
+export const uploadPosts = async (req, res) => {
+  const upload_preset = "gnaniaora_images";
+
+  const options = {
+    cloud_name: "dqftexife",
+  };
+  cloudinary.v2.uploader
+    .unsigned_upload(
+      "C:UsersGnaneswar YallaDesktopProjectsProject VideosStudyEasy\forgotPassword.png",
+      upload_preset,
+      options
+    )
+    .then((result) => console.log(result));
+
+  // cloudinary.v2.uploader
+  //   .upload(
+  //     "C:UsersGnaneswar YallaDesktopProjectsProject VideosStudyEasy\forgotPassword.png",
+  //     {
+  //       use_filename: true,
+  //     }
+  //   )
+  //   .then((result) => console.log(result));
+};
