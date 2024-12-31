@@ -66,3 +66,16 @@ export const getLatestPosts = async () => {
     throw error;
   }
 };
+
+export const searchPosts = async (query) => {
+  try {
+    const response = await axios.get(`${baseURL}/posts/search-posts`, {
+      withCredentials: true,
+      params: { query },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

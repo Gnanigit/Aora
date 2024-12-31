@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
+  StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
 import { icons } from "../constants";
-import { Video, ResizeMode } from "expo-av";
-import YoutubePlayer from "react-native-youtube-iframe";
+import { useEvent } from "expo";
+import { useVideoPlayer, VideoView } from "expo-video";
+// import { Video, ResizeMode } from "expo-av";
+// import YoutubePlayer from "react-native-youtube-iframe";
 
 const ZoomIn = {
   0: {
@@ -33,24 +36,22 @@ const ZoomOut = {
 const TrendingItem = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
 
-  // if video is youtube video --- start
-  const extractYouTubeVideoId = (url) => {
-    const regex = /(?:youtube\.com.*(?:\?|\&)v=|youtu\.be\/)([^?&]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  };
+  const videoSource = item.video;
+  const player = useVideoPlayer(videoSource, (player) => {
+    player.loop = false;
+    player.play();
+  });
 
-  const youtubeUrl = item.video;
-  const video_Id = extractYouTubeVideoId(youtubeUrl);
+  const { isPlaying } = useEvent(player, "playingChange", {
+    isPlaying: player.playing,
+  });
 
-  const onStateChange = (state) => {
-    if (state === "ended") {
+  useEffect(() => {
+    const finishedThreshold = player.duration * 0.9;
+    if (player.currentTime >= finishedThreshold && player.currentTime > 0) {
       setPlay(false);
-      Alert.alert("Video has finished playing!");
     }
-  };
-
-  // if video is youtube video --- end
+  }, [player.currentTime, isPlaying]);
 
   return (
     <Animatable.View
@@ -59,29 +60,13 @@ const TrendingItem = ({ activeItem, item }) => {
       duration={500}
     >
       {play ? (
-        <Video
-          source={{ uri: item.video }}
+        <VideoView
           className=" w-52 h-72 mt-3 bg-white/10 rounded-[35px]"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinis) {
-              setPlay(false);
-            }
-          }}
+          player={player}
+          allowsFullscreen
+          allowsPictureInPicture
         />
       ) : (
-        // if video is youtube video --- start
-        // <YoutubePlayer
-        //   height={300}
-        //   width={Dimensions.get("window").width - 40}
-        //   videoId={video_Id}
-        //   useNativeControls
-        //   shouldPlay
-        //   onChangeState={onStateChange}
-        // />
-        // if video is youtube video --- end
         <TouchableOpacity
           className="relative justify-center items-center"
           activeOpacity={0.5}

@@ -21,6 +21,28 @@ export const getLatestPosts = async (req, res) => {
   }
 };
 
+export const searchPosts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    console.log("Search Query:", query);
+
+    // Exact match
+    const exactMatches = await Post.find({
+      title: { $regex: `^${query}$`, $options: "i" },
+    });
+
+    // Partial match
+    const partialMatches = await Post.find({
+      title: { $regex: query, $options: "i" },
+    });
+
+    return res.status(200).json({ exactMatches, partialMatches });
+  } catch (error) {
+    console.error("Error fetching posts:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const uploadPost = async (req, res) => {
   try {
     const result = await Post.insertMany(sampleData);

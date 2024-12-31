@@ -1,31 +1,31 @@
 import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AvatarComponent from "./AvatarComponent";
 import { icons } from "../constants";
-import YoutubePlayer from "react-native-youtube-iframe";
+import { useEvent } from "expo";
+import { useVideoPlayer, VideoView } from "expo-video";
+// import YoutubePlayer from "react-native-youtube-iframe";
 const VideoCard = ({
   video: { title, thumbnail, video, creator, username, avatar },
 }) => {
   const [play, setPlay] = useState(false);
 
-  // if video is youtube video --- start
-  const extractYouTubeVideoId = (url) => {
-    const regex = /(?:youtube\.com.*(?:\?|\&)v=|youtu\.be\/)([^?&]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  };
+  const player = useVideoPlayer(video, (player) => {
+    player.loop = false;
+    player.play();
+  });
 
-  const youtubeUrl = video;
-  const video_Id = extractYouTubeVideoId(youtubeUrl);
+  const { isPlaying } = useEvent(player, "playingChange", {
+    isPlaying: player.playing,
+  });
 
-  const onStateChange = (state) => {
-    if (state === "ended") {
+  useEffect(() => {
+    const finishedThreshold = player.duration * 0.9;
+    if (player.currentTime >= finishedThreshold && player.currentTime > 0) {
       setPlay(false);
-      Alert.alert("Video has finished playing!");
     }
-  };
+  }, [player.currentTime]);
 
-  // if video is youtube video --- end
   return (
     <View className="flex-col items-center px-4 mb-14">
       <View className="flex-row gap-3 items-start">
@@ -57,30 +57,13 @@ const VideoCard = ({
         </View>
       </View>
       {play ? (
-        // <Video
-        //   source={{ uri: item.video }}
-        //   className=" w-full h-60 mt-3  rounded-[35px]"
-        //   resizeMode={ResizeMode.CONTAIN}
-        //   useNativeControls
-        //   shouldPlay
-        //   onPlaybackStatusUpdate={(status) => {
-        //     if (status.didJustFinis) {
-        //       setPlay(false);
-        //     }
-        //   }}
-        // />
-
-        // if video is youtube video --- start
-        <YoutubePlayer
-          height={300}
-          width={Dimensions.get("window").width - 40}
-          videoId={video_Id}
-          useNativeControls
-          shouldPlay
-          onChangeState={onStateChange}
+        <VideoView
+          className="w-full h-60 "
+          player={player}
+          allowsFullscreen
+          allowsPictureInPicture
         />
       ) : (
-        // if video is youtube video --- end
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {

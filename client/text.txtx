@@ -1,0 +1,34 @@
+npx create-expo-app Aora --template blank
+
+
+for you tube video ---------------
+
+<YoutubePlayer
+    height={300}
+    width={Dimensions.get("window").width - 40}
+    videoId={video_Id}
+    useNativeControls
+    shouldPlay
+    onChangeState={onStateChange}
+/>
+
+
+
+const extractYouTubeVideoId = (url) => {
+const regex = /(?:youtube\.com.*(?:\?|\&)v=|youtu\.be\/)([^?&]+)/;
+const match = url.match(regex);
+return match ? match[1] : null;
+};
+
+const youtubeUrl = video;
+const video_Id = extractYouTubeVideoId(youtubeUrl);
+
+const onStateChange = (state) => {
+if (state === "ended") {
+    setPlay(false);
+    Alert.alert("Video has finished playing!");
+}
+};
+
+
+------------------------------------------------

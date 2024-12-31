@@ -1,1 +1,13 @@
 npx create-expo-app Aora --template blank
+
+
+fot you tube video ------------------
+
+        // <YoutubePlayer
+        //   height={300}
+        //   width={Dimensions.get("window").width - 40}
+        //   videoId={video_Id}
+        //   useNativeControls
+        //   shouldPlay
+        //   onChangeState={onStateChange}
+        // />
